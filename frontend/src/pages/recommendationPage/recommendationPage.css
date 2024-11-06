@@ -1,0 +1,23 @@
+.SelectedContainer {
+    display: flex;
+    flex-direction: row !important;
+    justify-content: flex-start;
+    overflow-x: scroll !important;
+    white-space: nowrap;
+    padding: 10px;
+    gap: 10px;
+
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.SelectedContainer::-webkit-scrollbar {
+    display: none
+}
+
+.Selectedh2 {
+    margin: 0;
+    margin-left: 2rem !important;
+    font-size: 20px;
+    color: white;
+}

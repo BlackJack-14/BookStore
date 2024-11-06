@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios"; // Import axios
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link, useLocation, useNavigate } from "react-router-dom"; // Import useNavigate
 import { toast } from "react-hot-toast"; // Import toast
 import styles from "./loginPage.module.css"; // Import styles from CSS Module
 
-const LoginPage = ({ login, admin }) => {
+const LoginPage = ({ login, admin, setUser }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -12,6 +12,8 @@ const LoginPage = ({ login, admin }) => {
   const [credentials, setCredentials] = useState(true);
 
   const navigate = useNavigate(); // Initialize navigate
+  const location = useLocation();
+  const redirectUrl = location.state?.redirect || "/";
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,12 +32,11 @@ const LoginPage = ({ login, admin }) => {
       console.log("Login successful:", response.data);
       login(true); // Update login state to true
       admin(response.data.isAdmin); // Update isAdmin state
+      setUser(email); // Update userID state
       toast.success("Login successful!");
 
       setTimeout(() => {
-        if (admin) {
-          navigate("/");
-        } // Redirect to the home page after 2 seconds
+        navigate(redirectUrl);
       }, 1500);
     } catch (err) {
       if (err.response?.data?.message === "User not found") {
