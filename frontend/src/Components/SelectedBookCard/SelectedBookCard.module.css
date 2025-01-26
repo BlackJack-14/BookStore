@@ -1,7 +1,7 @@
 .BookCard {
     display: flex;
-    width: 475px;
-    min-height: 300px;
+    flex-direction: column !important;
+    width: 250px;
     margin: 1rem !important;
     padding: 0 !important;
     background-color: #e7c6fe;
@@ -21,12 +21,6 @@
     margin: 10px 15px 15px 15px;
     align-items: center !important;
     text-align: left !important;
-}
-
-.Title {
-    text-align: wrap;
-    word-wrap: break-word;
-
 }
 
 .info {
@@ -60,19 +54,24 @@ p {
     padding: 0 !important;
 }
 
-img {
-    min-width: 200px;
-    border-radius: 15px 0 0px 15px !important;
+.img {
+    border-radius: 15px 15px 0 0px !important;
     height: auto;
     transition: transform 0.3s ease;
 }
 
 
 .hr {
-    width: 100%;
+    width: 85%;
     border: 1px solid #272138;
-    margin: 5px 0px;
-    padding: 0 5px;
+    margin: 0px;
+    padding: 0;
+}
+
+.Title {
+    text-align: wrap;
+    word-wrap: break-word;
+
 }
 
 .BuyNow {
@@ -81,19 +80,19 @@ img {
 }
 
 @media screen and (min-width: 480px) {
-    img {
-        width: 200px !important;
+    .img {
+        width: 250px !important;
     }
 
-    .BookCard:hover img {
-        transform: scale(1.15);
+    .BookCard:hover .img {
+        transform: scale(1.1);
     }
 
 }
 
 @media screen and (max-width: 470px) {
-    img {
-        width: 350px !important;
+    .img {
+        width: 270px !important;
         border-radius: 15px 15px 0 0 !important;
         margin: 0 !important;
 
@@ -101,7 +100,7 @@ img {
 
     .BookCard {
         flex-direction: column;
-        width: 350px;
+        width: 270px;
     }
 
     .Details {
@@ -148,63 +147,5 @@ img {
         padding: 0;
     }
 
-    .BuyNow {
-        margin: 5% 0 !important;
-    }
 
-
-}
-
-
-
-
-/** DELETE TOAST CSS **/
-
-.DeleteToast {
-    display: flex;
-    flex-direction: column;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-    max-width: 300px;
-    text-align: center !important;
-}
-
-
-.buttons {
-    margin: 0px;
-    margin-top: 10px;
-    display: flex;
-    justify-content: space-around;
-}
-
-.Delete {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-}
-
-.Delete:hover {
-    background-color: #c0392b;
-}
-
-.Cancel {
-    background-color: #95a5a6;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    text-transform: uppercase;
-    transition: background-color 0.2s ease;
-}
-
-.Cancel:hover {
-    background-color: #7f8c8d;
 }

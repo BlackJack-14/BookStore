@@ -56,7 +56,6 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
         `${import.meta.env.VITE_SERVER_URI}/recommendations/${user}`
       );
       if (response.data.count > 0) {
-        console.log(response.data);
         setHasRecommendation(true);
         setLoading(false);
         setRecommendationState(response.data.data[0].state);
@@ -178,7 +177,6 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
           description: descriptionText,
         }
       );
-      console.log(response);
       if (response.status == 200) {
         // Handle success (e.g., show a success message or reset the form)
         toast.success("Recommendation submitted successfully!");
@@ -192,34 +190,22 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
       toast.error("Failed to submit recommendation. Please try again.");
     }
   };
-
-  const handleApprove = async (id) => {
-    try {
-      await axios.put(
-        `${import.meta.env.VITE_SERVER_URI}/recommendations/${id}`,
-        {
-          state: true,
+  const handleDelete = () => {
+    axios
+      .delete(`${import.meta.env.VITE_SERVER_URI}/recommendations/${user}`)
+      .then((response) => {
+        if (response.status == 200) {
+          toast.success("Recommendation deleted successfully!");
+          setSelectedBooks([]);
+          setDescriptionText("");
+          setHasRecommendation(false);
+          setIsDescription(false);
         }
-      );
-      toast.success("Recommendation approved!");
-      fetchAllRecommendations();
-    } catch (error) {
-      console.error("Error approving recommendation:", error);
-      toast.error("Failed to approve recommendation. Please try again.");
-    }
-  };
-
-  const handleReject = async (id) => {
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_SERVER_URI}/recommendations/${id}`
-      );
-      toast.success("Recommendation rejected!");
-      fetchAllRecommendations();
-    } catch (error) {
-      console.error("Error rejecting recommendation:", error);
-      toast.error("Failed to reject recommendation. Please try again.");
-    }
+      })
+      .catch((error) => {
+        console.error("Error deleting recommendation:", error);
+        toast.error("Failed to delete recommendation. Please try again.");
+      });
   };
 
   if (!loggedin) {
@@ -251,15 +237,15 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
             : "Your Previous Recommendation"}
         </h2>
         <div className="SelectedContainer">
-          {selectedBooks.map((bookdata) => (
-            <SelectedBookCard
-              key={bookdata.ISBN}
-              data={bookdata}
-              isSelected={true}
-            />
-          ))}
+          {selectedBooks.map((bookdata) =>
+            recommendationState ? (
+              <BookCard key={bookdata.ISBN} data={bookdata} />
+            ) : (
+              <BookCard key={bookdata.ISBN} data={bookdata} isSelected={true} />
+            )
+          )}
         </div>
-        <div className="DescriptionSection">
+        <div className="DescriptionSection center">
           <TextField
             label={
               recommendationState
@@ -278,6 +264,7 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
             InputLabelProps={{
               style: { color: "white" },
             }}
+            style={{ width: "90%" }}
             sx={{
               "& .MuiOutlinedInput-root": {
                 "& fieldset": {
@@ -292,6 +279,20 @@ const RecommendationPage = ({ isAdmin = false, loggedin = false, user }) => {
               },
             }}
           />
+          <Button
+            onClick={handleDelete}
+            variant="contained"
+            style={{
+              marginTop: "20px",
+              marginBottom: "50px",
+              marginLeft: "0",
+              marginRight: "0",
+              width: "300px",
+              backgroundColor: "red",
+            }}
+          >
+            Delete this recommendation
+          </Button>
         </div>
       </div>
     );

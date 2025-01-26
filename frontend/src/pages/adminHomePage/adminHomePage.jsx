@@ -46,7 +46,7 @@ const AdminHomePage = () => {
       const response = await axios.get(
         `https://www.googleapis.com/books/v1/volumes?q=${search}`
       );
-      const newBooks = response.data.items.slice(0, 10).map((item) => ({
+      const newBooks = response.data.items.slice(0, 15).map((item) => ({
         Title: item.volumeInfo.title,
         Author: item.volumeInfo.authors?.[0] || "Unknown Author",
         PublishYear: item.volumeInfo.publishedDate
@@ -167,6 +167,7 @@ const AdminHomePage = () => {
       <div className="BookContainer">
         {filteredBooks.length > 0 ? (
           filteredBooks
+            .reverse()
             .slice(0, DisplaySize)
             .map((bookdata) => (
               <BookCard

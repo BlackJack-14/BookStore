@@ -3,12 +3,16 @@ import "./BookCard.css";
 import { Button, IconButton } from "@mui/material";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import SaveAsRoundedIcon from "@mui/icons-material/SaveAsRounded";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const BookCard = ({ data, admin, reload }) => {
+const BookCard = ({ data, admin, reload, select, onSelect, isSelected }) => {
   const navigate = useNavigate();
+
+  // Function to delete book and reload the data if successful
   const DeleteBook = async (ISBN) => {
     try {
       const response = await axios.delete(
@@ -16,19 +20,19 @@ const BookCard = ({ data, admin, reload }) => {
       );
 
       if (response.status === 200) {
-        console.log(`Book with ISBN "${ISBN}" deleted successfully!`);
         toast.success(`Book "${data.Title}" deleted successfully!`, {
           duration: 3000,
         });
         reload();
       }
     } catch (error) {
-      console.error("Error occurred during book deletion:", error);
       toast.error(`Failed to delete book "${data.Title}". Please try again.`, {
         duration: 3000,
       });
     }
   };
+
+  // Toast confirmation for deleting a book
   const DeleteBookToast = ({ bookName, ISBN }) => {
     toast(
       (t) => (
@@ -55,6 +59,8 @@ const BookCard = ({ data, admin, reload }) => {
       { duration: Infinity }
     );
   };
+
+  // Function to navigate to the book edit page
   const EditBook = (ISBN) => {
     navigate(`/edit/${ISBN}`);
   };
@@ -64,11 +70,12 @@ const BookCard = ({ data, admin, reload }) => {
       <img src={data.ImageURL} alt={data.Title} />
       <div className="Details">
         <div className="info">
-          <p>{data.Title}</p>
+          <p className="Title">{data.Title}</p>
           <hr className="hr" />
           <p className="Author">{data.Author}</p>
           <p className="PublishYear">{data.PublishYear}</p>
         </div>
+
         <a className="BuyNow" target="blank" href={data.AmazonURL}>
           <Button
             variant="outlined"
@@ -83,36 +90,53 @@ const BookCard = ({ data, admin, reload }) => {
               color: "white",
               backgroundColor: "#7C42E2",
               "&:hover": {
-                backgroundColor: "#4f10bc", // Change to a darker purple on hover
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)", // Add shadow effect
+                backgroundColor: "#4f10bc",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.2)",
               },
             }}
           >
             Buy Now
           </Button>
         </a>
+
+        {select && (
+          <IconButton
+            onClick={() => onSelect(data)}
+            sx={{
+              color: isSelected ? "#1100ff" : "gray",
+              transition: "color 0.3s ease",
+              "&:hover": { color: isSelected ? "#0056b3" : "black" },
+            }}
+          >
+            {isSelected ? <CheckCircleIcon /> : <CheckBoxOutlineBlankIcon />}
+          </IconButton>
+        )}
+
         {admin && (
           <div className="icons">
             <IconButton
               sx={{
-                color: "#1e90ff", // Base color: DodgerBlue (bright, energetic)
+                color: "#1e90ff",
                 marginLeft: "10px",
                 transition:
-                  "color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease", // Smooth transition for color, transform, and shadow
-                "&:hover": {},
+                  "color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease",
+                "&:hover": {
+                  color: "#0056b3",
+                  transform: "scale(1.1)",
+                },
               }}
               onClick={() => EditBook(data.ISBN)}
             >
-              <SaveAsRoundedIcon sx={{ fontSize: 28 }} />{" "}
-              {/* Adjust icon size for better visibility */}
+              <SaveAsRoundedIcon sx={{ fontSize: 28 }} />
             </IconButton>
 
             <IconButton
               sx={{
-                color: "red", // Make the icon red
+                color: "red",
                 marginLeft: "10px",
                 "&:hover": {
-                  color: "#ff0000", // Brighter red on hover
+                  color: "#ff0000",
+                  transform: "scale(1.1)",
                 },
               }}
               onClick={() =>
